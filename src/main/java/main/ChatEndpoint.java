@@ -1,7 +1,10 @@
 package main;
 
-import decoder.MessageDecoder;
+import coder.GreeterNotificationEncoder;
+import coder.MessageDecoder;
 import helper.Message;
+import notifications.Greeter;
+import repository.Repository;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -16,12 +19,19 @@ import javax.websocket.server.ServerEndpoint;
 
 
 /**
- *
  * @author H. Lackinger
  */
-@ServerEndpoint(value = "/chat", decoders = {MessageDecoder.class})
+@ServerEndpoint(
+        value = "/chat",
+        decoders = {
+                MessageDecoder.class
+        },
+        encoders = {
+                GreeterNotificationEncoder.class
+        })
 public class ChatEndpoint {
     private static Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
+    private Repository repo = new Repository();
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
@@ -30,8 +40,16 @@ public class ChatEndpoint {
 
     @OnMessage
     public void distribute(Message message, Session session) {
-        for (Session client : sessions) {
-            client.getAsyncRemote().sendText(/*message*/"hi");
+        if (message.getHeader().getPrivate()) {
+            if (message.getBody().startsWith("[login]")) {
+                repo.login(message.getBody().replace("[login]", ""), session);
+            } else if (message.getBody().startsWith("[register]")) {
+                repo.register(message.getBody().replace("[login]", ""), session);
+            }
+        } else {
+            if (repo.checkSign(message.getHeader())) {
+                //TODO: implement can send
+            }
         }
     }
 

@@ -1,8 +1,7 @@
-package decoder;
+package coder;
 
 import helper.Header;
 import helper.Message;
-import org.eclipse.persistence.internal.jaxb.json.schema.model.JsonSchema;
 import org.json.JSONObject;
 
 import javax.websocket.DecodeException;
@@ -19,7 +18,7 @@ public class MessageDecoder implements Decoder.Text<Message> {
                 head.getString("token"),
                 head.getInt("groupID"));
 
-        return new Message();
+        return new Message(header, body);
     }
 
     @Override
