@@ -25,7 +25,7 @@ public class SocketServer {
             server.start();
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(System.in));
-            System.out.print("Please press a key to stop the chat-server.");
+            System.out.print("Please press a key to stop the chat-server.\n");
             reader.readLine();
         } catch (Exception me) {
             //if u can

@@ -1,0 +1,39 @@
+package decoder;
+
+import helper.Header;
+import helper.Message;
+import org.eclipse.persistence.internal.jaxb.json.schema.model.JsonSchema;
+import org.json.JSONObject;
+
+import javax.websocket.DecodeException;
+import javax.websocket.Decoder;
+import javax.websocket.EndpointConfig;
+
+public class MessageDecoder implements Decoder.Text<Message> {
+
+    @Override
+    public Message decode(String s) throws DecodeException {
+        JSONObject head = new JSONObject(s).getJSONObject("header");
+        String body = new JSONObject(s).getString("body");
+        Header header = new Header(head.getBoolean("isPrivate"),
+                head.getString("token"),
+                head.getInt("groupID"));
+
+        return new Message();
+    }
+
+    @Override
+    public boolean willDecode(String s) {
+        return true;
+    }
+
+    @Override
+    public void init(EndpointConfig endpointConfig) {
+        //does nothing
+    }
+
+    @Override
+    public void destroy() {
+        //does nothing
+    }
+}

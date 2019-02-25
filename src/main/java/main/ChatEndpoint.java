@@ -1,5 +1,8 @@
 package main;
 
+import decoder.MessageDecoder;
+import helper.Message;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,20 +19,19 @@ import javax.websocket.server.ServerEndpoint;
  *
  * @author H. Lackinger
  */
-@ServerEndpoint("/chat")
+@ServerEndpoint(value = "/chat", decoders = {MessageDecoder.class})
 public class ChatEndpoint {
     private static Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
         sessions.add(session);
-        
     }
 
     @OnMessage
-    public void distribute(String message, Session session) {
+    public void distribute(Message message, Session session) {
         for (Session client : sessions) {
-            client.getAsyncRemote().sendText(message);
+            client.getAsyncRemote().sendText(/*message*/"hi");
         }
     }
 
