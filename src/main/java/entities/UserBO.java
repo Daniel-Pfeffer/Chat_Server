@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 @Entity
-@Table(name = "Websockets_User")
+@Table(name = "WS_USER")
 @NamedQueries({
         @NamedQuery(name = "User_getUserByEmail", query = "Select u from UserBO u where u.email like :mail")
 })
@@ -24,10 +24,10 @@ public class UserBO {
     private String email;
     @Transient
     private String password;
-    @OneToOne
-    private JsonWebTokens jwt;
     private String passwordHash;
     private String salt;
+    @Transient
+    private String jwt;
 
 
     public UserBO() {
@@ -99,14 +99,6 @@ public class UserBO {
         this.session = session;
     }
 
-    public JsonWebTokens getJwt() {
-        return jwt;
-    }
-
-    public void setJwt(JsonWebTokens jwt) {
-        this.jwt = jwt;
-    }
-
     public String getPasswordHash() {
         return passwordHash;
     }
@@ -121,5 +113,13 @@ public class UserBO {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public String getJwt() {
+        return jwt;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
     }
 }

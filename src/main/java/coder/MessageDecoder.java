@@ -13,7 +13,7 @@ public class MessageDecoder implements Decoder.Text<Message> {
     @Override
     public Message decode(String s) throws DecodeException {
         JSONObject head = new JSONObject(s).getJSONObject("header");
-        String body = new JSONObject(s).getString("body");
+        String body = new JSONObject(s).optString("body");
         Header header = new Header(head.getBoolean("isPrivate"),
                 head.getString("token"),
                 head.getInt("groupID"));

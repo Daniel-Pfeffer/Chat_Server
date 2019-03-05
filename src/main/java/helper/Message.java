@@ -21,9 +21,9 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" +
-                "header=" + header +
-                ", body='" + body + '\'' +
+        return "{" +
+                "\'header\':" + header +
+                ",\'body\':'" + body + '\'' +
                 '}';
     }
 

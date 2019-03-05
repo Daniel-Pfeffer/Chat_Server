@@ -2,6 +2,7 @@ package helper;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,12 +30,20 @@ public class Jwt {
                 .compact();
     }
 
-    public String checkForSubject(String jwt) {
-        return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(jwt)
-                .getBody()
-                .getSubject();
-
+    public String checkForSubject(String jwt) throws SignatureException {
+        try {
+            if (jwt != null && !jwt.equals("null")) {
+                return Jwts.parser()
+                        .setSigningKey(secret)
+                        .parseClaimsJws(jwt)
+                        .getBody()
+                        .getSubject();
+            }
+            System.out.println("HI");
+            return null;
+        } catch (SignatureException se) {
+            //se.printStackTrace();
+            return null;
+        }
     }
 }

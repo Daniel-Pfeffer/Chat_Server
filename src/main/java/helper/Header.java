@@ -45,15 +45,19 @@ public class Header {
         this.groupID = groupID;
     }
 
+    public Header(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
     public Header() {
     }
 
     @Override
     public String toString() {
-        return "Header{" +
-                "isPrivate=" + isPrivate +
-                ", token='" + token + '\'' +
-                ", groupID=" + groupID +
+        return "{" +
+                "\'isPrivate\':" + isPrivate +
+                ",\'token\':'" + token + '\'' +
+                ",\'groupID\':" + groupID +
                 '}';
     }
 }

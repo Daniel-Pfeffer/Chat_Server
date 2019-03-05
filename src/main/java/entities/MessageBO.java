@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "Websockets_Message")
+@Table(name = "WS_MSG")
 public class MessageBO {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
