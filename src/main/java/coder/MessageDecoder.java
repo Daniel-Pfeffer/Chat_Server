@@ -14,9 +14,14 @@ public class MessageDecoder implements Decoder.Text<Message> {
     public Message decode(String s) throws DecodeException {
         JSONObject head = new JSONObject(s).getJSONObject("header");
         String body = new JSONObject(s).optString("body");
-        Header header = new Header(head.getBoolean("isPrivate"),
-                head.getString("token"),
-                head.getInt("groupID"));
+        Header header;
+        if (head.has("groupID")) {
+            header = new Header(head.getBoolean("isPrivate"),
+                    head.getString("token"),
+                    head.getInt("groupID"));
+        } else {
+            header = new Header(head.getBoolean("isPrivate"), head.getString("token"));
+        }
 
         return new Message(header, body);
     }

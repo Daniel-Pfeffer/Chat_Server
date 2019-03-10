@@ -36,7 +36,7 @@ import javax.websocket.server.ServerEndpoint;
                 MessageEncoder.class
         })
 public class ChatEndpoint {
-    private Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
+    private Set<Session> sessions = Collections.synchronizedSet(new HashSet<>());
     private Repository repo = new Repository();
 
     @OnOpen

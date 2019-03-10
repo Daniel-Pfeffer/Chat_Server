@@ -45,6 +45,11 @@ public class Header {
         this.groupID = groupID;
     }
 
+    public Header(Boolean isPrivate, String token) {
+        this.isPrivate = isPrivate;
+        this.token = token;
+    }
+
     public Header(Boolean isPrivate) {
         this.isPrivate = isPrivate;
     }
