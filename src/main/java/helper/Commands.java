@@ -5,7 +5,7 @@ public enum Commands {
     REGISTER("[register]"),
     LOGIN("[login]"),
     KICK("[kick]"),
-    CREATE("[login]"),
+    CREATE("[create]"),
     DISBAND("[disband]"),
     INVITE("[invite]");
 

@@ -33,11 +33,13 @@ public class Jwt {
     public String checkForSubject(String jwt) throws SignatureException {
         try {
             if (jwt != null && !jwt.equals("null")) {
-                return Jwts.parser()
+                String subject = Jwts.parser()
                         .setSigningKey(secret)
                         .parseClaimsJws(jwt)
                         .getBody()
                         .getSubject();
+                System.out.println(subject);
+                return subject;
             }
             System.out.println("HI");
             return null;

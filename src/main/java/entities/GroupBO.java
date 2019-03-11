@@ -10,6 +10,9 @@ public class GroupBO {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String name;
+
+
     @ManyToMany
     private List<UserBO> users = new ArrayList<>();
 
@@ -38,5 +41,21 @@ public class GroupBO {
 
     public void setAdmin(UserBO admin) {
         this.admin = admin;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public GroupBO() {
+    }
+
+    public GroupBO(UserBO admin, String name) {
+        this.admin = admin;
+        this.name = name;
     }
 }

@@ -5,6 +5,7 @@ import helper.Commands;
 import helper.Header;
 import helper.Message;
 import notifications.Greeter;
+import notifications.Information;
 import notifications.Login;
 import notifications.Register;
 import repository.Repository;
@@ -33,7 +34,8 @@ import javax.websocket.server.ServerEndpoint;
                 GreeterNotificationEncoder.class,
                 LoginNotificationEncoder.class,
                 RegisterNotificationEncoder.class,
-                MessageEncoder.class
+                MessageEncoder.class,
+                InformationNotificationEncoder.class
         })
 public class ChatEndpoint {
     private Set<Session> sessions = Collections.synchronizedSet(new HashSet<>());
@@ -59,22 +61,24 @@ public class ChatEndpoint {
                                 repo.register(message.getBody().replace(Commands.REGISTER.toString(), ""), session)
                         )
                 );
-            } else if (message.getBody().startsWith(Commands.CREATE.toString())) {
-                String newBody = message.getBody().replace(Commands.CREATE.toString(), "");
-                //TODO: implement create group chats
-            } else if (message.getBody().startsWith(Commands.INVITE.toString())) {
-                String newBody = message.getBody().replace(Commands.INVITE.toString(), "");
-                //TODO: implement invite users to group chat
-            } else if (message.getBody().startsWith(Commands.KICK.toString())) {
-                String newBody = message.getBody().replace(Commands.KICK.toString(), "");
-                //TODO: implement kick users from group chats
-            } else if (message.getBody().startsWith(Commands.DISBAND.toString())) {
-                String newBody = message.getBody().replace(Commands.DISBAND.toString(), "");
-                //TODO: implement disbanding of group chat
+            } else if (repo.checkSign(message.getHeader())) {
+                if (message.getBody().startsWith(Commands.CREATE.toString())) {
+                    String groupName = message.getBody().replace(Commands.CREATE.toString(), "");
+                    session.getAsyncRemote().sendObject(new Information(Commands.CREATE, repo.createGroup(groupName, repo.getSubject(message.getHeader()))));
+                } else if (message.getBody().startsWith(Commands.INVITE.toString())) {
+                    String newBody = message.getBody().replace(Commands.INVITE.toString(), "");
+                    //TODO: implement invite users to group chat
+                } else if (message.getBody().startsWith(Commands.KICK.toString())) {
+                    String newBody = message.getBody().replace(Commands.KICK.toString(), "");
+                    //TODO: implement kick users from group chats
+                } else if (message.getBody().startsWith(Commands.DISBAND.toString())) {
+                    String groupName = message.getBody().replace(Commands.DISBAND.toString(), "");
+                    session.getAsyncRemote().sendObject(new Information(Commands.DISBAND, repo.disbandGroup(groupName, repo.getSubject(message.getHeader()))));
+                }
             }
+
         } else {
             if (repo.checkSign(message.getHeader())) {
-                System.out.println("Hello");
                 //TODO: implement can send
             } else {
                 session.getAsyncRemote().sendObject(

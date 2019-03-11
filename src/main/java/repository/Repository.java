@@ -5,9 +5,11 @@ import entities.UserBO;
 import helper.Header;
 import helper.Jwt;
 import org.bouncycastle.util.encoders.Hex;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.websocket.Session;
 import java.nio.charset.StandardCharsets;
@@ -30,15 +32,22 @@ public class Repository {
         em = emf.createEntityManager();
         jwt = new Jwt();
         this.users = new ArrayList<>();
+        this.groups = new ArrayList<>();
     }
 
 
     public UserBO login(String body, Session session) {
         List<String> params = Arrays.asList(body.split("\\|"));
         em.getTransaction().begin();
-        UserBO user = em.createNamedQuery("User_getUserByEmail", UserBO.class)
-                .setParameter("mail", params.get(0))
-                .getSingleResult();
+        UserBO user;
+        try {
+            user = em.createNamedQuery("User_getUserByEmail", UserBO.class)
+                    .setParameter("mail", params.get(0))
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            em.getTransaction().commit();
+            return null;
+        }
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(Hex.decode(user.getSalt()));
@@ -91,7 +100,28 @@ public class Repository {
         return jwt.checkForSubject(token) != null;
     }
 
-    public GroupBO createGroup(String body) {
+    public String getSubject(Header header) {
+        return jwt.checkForSubject(header.getToken());
+    }
+
+    public GroupBO createGroup(String groupName, String username) {
+        System.out.println("in createGroup");
+        UserBO user = users.stream().filter(item -> item.getUsername().equals(username)).findFirst().get();
+        GroupBO group = new GroupBO(user, groupName);
+        groups.add(group);
+        return group;
+    }
+
+    public ArrayList<Session> getUserSessions() {
+        throw new NotImplementedException();
+    }
+
+    public GroupBO disbandGroup(String groupName, String username) {
+        UserBO user = users.stream().filter(item -> item.getUsername().equals(username)).findFirst().get();
+        GroupBO group = groups.stream().filter(item -> item.getName().equals(groupName)).findFirst().get();
+        if (group.getAdmin().equals(user)) {
+            groups.remove(group);
+        }
         return null;
     }
 }

@@ -18,4 +18,20 @@ public class MessageBO {
 
     @Temporal(TemporalType.DATE)
     private Date timeSent;
+
+    public MessageBO() {
+    }
+
+    public MessageBO(GroupBO group, UserBO user, String msg, Date timeSent) {
+        this.group = group;
+        this.user = user;
+        this.msg = msg;
+        this.timeSent = timeSent;
+    }
+
+    public MessageBO(GroupBO group, UserBO user, String msg) {
+        this.group = group;
+        this.user = user;
+        this.msg = msg;
+    }
 }
